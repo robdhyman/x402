@@ -16,6 +16,7 @@ import json, html, sys, os, copy, re, subprocess, pathlib
 
 OUT = os.path.dirname(os.path.abspath(__file__))
 SPACING, X0, TOP = 170, 85, 54
+ROLE_N = 28  # characters of role text that fit the 164px lane head
 STYLE = "moitie" if "--style" in sys.argv and sys.argv[sys.argv.index("--style")+1] == "moitie" else "bare"
 RX = 6 if STYLE == "bare" else 0
 
@@ -75,7 +76,11 @@ def render_board(bid, lanes, steps):
     keys = [l[0] for l in lanes]
     lane_x = lambda k: X0 + keys.index(k) * SPACING
     W = X0 + (len(lanes) - 1) * SPACING + 85
-    y = TOP + 34
+    # a role longer than the lane head wraps to a second line; the head and everything under it move down to fit
+    roles = {l[0]: wrap(l[2], ROLE_N) for l in lanes}
+    grow = 13 * (max(len(r) for r in roles.values()) - 1)
+    top = TOP + grow
+    y = top + 34
     parts = []
     regions = []
     for st in steps:
@@ -127,10 +132,10 @@ def render_board(bid, lanes, steps):
         else:
             x = lane_x(st["lane"])
             w = SPACING + 20 if k == "slot" else SPACING - 10
-            n = 24 if k == "slot" else 26
-            wrapped = [(ln, "lbl") for ln in wrap(st["label"], n)]
+            n_lbl, n_sub = (23, 22) if k == "slot" else (22, 23)
+            wrapped = [(ln, "lbl") for ln in wrap(st["label"], n_lbl)]
             if st.get("sub"):
-                wrapped += [(ln, "sub") for ln in wrap(st["sub"], n)]
+                wrapped += [(ln, "sub") for ln in wrap(st["sub"], n_sub)]
             h = 12 + 15 * len(wrapped) + 4
             if k == "slot":
                 parts.append(f'<rect x="{x - w/2}" y="{y-10}" width="{w}" height="{h}" rx="{RX}" class="slot"/>')
@@ -156,21 +161,22 @@ def render_board(bid, lanes, steps):
                f'<marker id="{bid}-i" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="h-ident"/></marker></defs>')
     sx = lane_x("seller")
     out.append(f'<rect x="{sx-58}" y="0" width="116" height="{H}" class="tint"/>')
-    out.append(f'<line x1="0" x2="{W}" y1="{TOP}" y2="{TOP}" class="counter"/>')
+    out.append(f'<line x1="0" x2="{W}" y1="{top}" y2="{top}" class="counter"/>')
     for rg in regions:
         out.append(f'<rect x="{rg["x0"]}" y="{rg["y0"]}" width="{rg["x1"] - rg["x0"]}" height="{rg["y1"] - rg["y0"]}" rx="{RX}" class="region"/>')
     for lane in lanes:
         key, name, role = lane[0], lane[1], lane[2]
         wallet = len(lane) > 3 and lane[3]
         x = lane_x(key)
-        out.append(f'<line x1="{x}" x2="{x}" y1="{TOP+8}" y2="{H-14}" class="life"/>')
+        out.append(f'<line x1="{x}" x2="{x}" y1="{top+8}" y2="{H-14}" class="life"/>')
         if wallet:
-            out.append(f'<rect x="{x-27}" y="{TOP+6}" width="54" height="15" rx="7.5" class="wallet"/>')
-            out.append(f'<text x="{x}" y="{TOP+17}" text-anchor="middle" class="walletl">wallet</text>')
+            out.append(f'<rect x="{x-27}" y="{top+6}" width="54" height="15" rx="7.5" class="wallet"/>')
+            out.append(f'<text x="{x}" y="{top+17}" text-anchor="middle" class="walletl">wallet</text>')
         if STYLE == "bare":
-            out.append(f'<rect x="{x-82}" y="6" width="164" height="46" rx="{RX}" class="lanebox"/>')
+            out.append(f'<rect x="{x-82}" y="6" width="164" height="{46 + grow}" rx="{RX}" class="lanebox"/>')
             out.append(f'<text x="{x}" y="26" text-anchor="middle" class="lane">{esc(name)}</text>')
-            out.append(f'<text x="{x}" y="42" text-anchor="middle" class="role">{esc(role)}</text>')
+            for i, ln in enumerate(roles[key]):
+                out.append(f'<text x="{x}" y="{42 + 13*i}" text-anchor="middle" class="role">{esc(ln)}</text>')
         else:
             out.append(f'<text x="{x}" y="22" text-anchor="middle" class="lane">{esc(name)}</text>')
             out.append(f'<text x="{x}" y="39" text-anchor="middle" class="role serif">{esc(role)}</text>')
