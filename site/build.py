@@ -273,7 +273,7 @@ def evidence_page():
     gap = f" Not yet extracted: {empty}." if empty else ""
     body = f'''<header class="mast">
   <p class="eyebrow">Evidence</p>
-  <h1>Every quote on record</h1>
+  <h1>Working group transcripts</h1>
   <p class="count"><span id="shown">{len(QUOTES)}</span> of {len(QUOTES)} quotes · {sum(1 for m in EV["meetings"] if m["quotes"])} meetings</p>
   <p class="topline">Verbatim from the working group’s meeting transcripts, each checked against the recording’s transcript for speaker, wording and time. Times are offsets into the recording, not clock times. Speaker labels are as the transcript shows them.{gap}</p>
 </header>
