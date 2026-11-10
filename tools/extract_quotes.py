@@ -9,6 +9,7 @@ quote, its speaker label, its time and the heading it was filed under are publis
 Sources read:
   analysis/02-evidence-ledger-v2.md   meetings 1-5 (every quote passed verify_quotes.py when the ledger was built)
   analysis/11-cheatsheet-quotes.md    extra quotes per meeting, same convention
+  analysis/16-oct27-ledger.md         meeting 7, built by time range from the transcript and verified the same way
   use-cases/*.json (this repo)        quotes cited on the boards, re-checked here against the transcript
 """
 import argparse, glob, json, os, re, sys
@@ -19,6 +20,8 @@ EMAIL = re.compile(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}")
 BULLET = re.compile(r'^\s*- \*\*([^*]+)\*\* \[(chat )?(\d\d:\d\d:\d\d)\] "(.+)"\s*$')
 INLINE = re.compile(r'\*\*([^*]+)\*\* \[(chat )?(\d\d:\d\d:\d\d)\] "(.+?)"(?=[\s.,;:)]|$)')
 CITE = re.compile(r"([A-Z][a-z]+) \[(\d\d:\d\d:\d\d)\] “([^”]+)”")
+# A board may cite a stretch of the Oct 27 call without quoting it: "(Nicole, Oct 27 00:37–00:42)" or "(Oct 27 00:32–00:36)".
+RANGE = re.compile(r"(?:([A-Z][a-z]+), )?Oct 27 (\d\d:\d\d)(?:[–-](\d\d:\d\d))?")
 
 
 def clean(s):
@@ -117,6 +120,8 @@ def main():
     ledger_n = len(quotes)
     parse_markdown(os.path.join(a.cowork, "analysis", "11-cheatsheet-quotes.md"), quotes, "h2")
     sheet_n = len(quotes) - ledger_n
+    parse_markdown(os.path.join(a.cowork, "analysis", "16-oct27-ledger.md"), quotes, "h1")
+    oct27_n = len(quotes) - ledger_n - sheet_n
 
     vtts = {n: load_vtt(a.cowork, d) for n, d in MEETINGS.items()}
     unverified = []
@@ -128,6 +133,11 @@ def main():
                 unverified.append((board, name, time, text[:60]))
                 continue
             add(quotes, meeting, time, False, who, text, "Cited on the boards", None, board=board)
+        for name, start, end in RANGE.findall(open(path, encoding="utf-8").read()):
+            lo, hi = secs(start + ":00"), secs((end or start) + ":00") + 59
+            for q in quotes.values():
+                if q["meeting"] == 7 and lo <= secs(q["time"]) <= hi and (not name or q["speaker"].split(" ")[0] == name) and board not in q["boards"]:
+                    q["boards"].append(board)
 
     out = sorted(quotes.values(), key=lambda q: (q["meeting"], q["time"], q["speaker"]))
     seen = {}
@@ -146,7 +156,7 @@ def main():
     json.dump({"session": "Session 0", "date": "2026-11-09", "feedback_from": "2026-10-27", "rows": rows},
               open(os.path.join(REPO, "evidence", "changes.json"), "w", encoding="utf-8"), indent=1, ensure_ascii=False)
     print(f"change log rows {len(rows)}")
-    print(f"ledger {ledger_n} · cheat sheet +{sheet_n} · board cites +{len(out) - ledger_n - sheet_n} new · total {len(out)}")
+    print(f"ledger {ledger_n} · cheat sheet +{sheet_n} · Oct 27 +{oct27_n} · board cites +{len(out) - ledger_n - sheet_n - oct27_n} new · total {len(out)}")
     print("per meeting", counts)
     for u in unverified:
         print("NOT FOUND IN TRANSCRIPT", *u)
