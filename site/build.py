@@ -8,7 +8,8 @@ tools/extract_quotes.py), site/config.json (repo, giscus ids, discussion numbers
 repo's GitHub Issues labelled `tension` (fetched at build time; set GITHUB_TOKEN in CI).
 The build fails if any arrow breaks the x402 message whitelist (boards/verify_arrows.py).
 """
-import contextlib, io, json, os, re, shutil, subprocess, sys, urllib.request
+import contextlib, datetime, io, json, os, re, shutil, subprocess, sys, urllib.request
+from zoneinfo import ZoneInfo
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "boards"))
@@ -121,6 +122,35 @@ def shell(title, desc, depth, body, path, image=None, extra_head=""):
 '''
 
 
+MEETING = {m["n"]: m for m in EV["meetings"]}
+CT = ZoneInfo("America/Chicago")
+
+
+def clock(t):
+    """'10:25 a.m. CT (15:25 UTC)' for an aware datetime."""
+    ct = t.astimezone(CT)
+    return f"{ct.hour % 12 or 12}:{ct.minute:02d} {'a.m.' if ct.hour < 12 else 'p.m.'} CT ({t:%H:%M} UTC)"
+
+
+def quote_source(q):
+    """Where a quote came from, in full: the call, the moment it was said, the recording, the transcript."""
+    m = MEETING[q["meeting"]]
+    held = datetime.date.fromisoformat(q["date"])
+    rows = [("Call", f"x402 Identity Working Group meeting {m['n']} of {len(EV['meetings'])} · {held:%A}, {day(q['date'])}")]
+    start = m.get("recording_start_utc")
+    h, mi, se = map(int, q["time"].split(":"))
+    if start and not q["chat"]:
+        t0 = datetime.datetime.fromisoformat(start.replace("Z", "+00:00"))
+        rows.append(("Said at", f"{clock(t0 + datetime.timedelta(hours=h, minutes=mi, seconds=se))} · {q['time']} into the recording"))
+    else:
+        rows.append(("Said at", f"{'chat, ' if q['chat'] else ''}{q['time']} into the recording"))
+    link = CFG.get("recordings", {}).get(str(m["n"]))
+    rec = f"Zoom cloud recording, started {clock(t0)}" if start else "Zoom cloud recording"
+    rows.append(("Recording", f'{esc(rec)} · <a href="{esc(link)}">watch</a>' if link else f"{esc(rec)} · no public link posted"))
+    rows.append(("Transcript", "Zoom transcript of the same recording; wording, speaker and time checked against it" if q["verified"] else "Zoom transcript of the same recording; not yet checked against it"))
+    return '<dl class="q-src">' + "".join(f"<div><dt>{k}</dt><dd>{v if k == 'Recording' else esc(v)}</dd></div>" for k, v in rows) + "</dl>"
+
+
 def quote_li(q, rel, link=True):
     where = "chat " if q["chat"] else ""
     boards = "".join(f'<a class="chip" href="{rel}{slug(b)}/index.html">{uc_tag(b)}</a>' for b in q["boards"])
@@ -129,6 +159,7 @@ def quote_li(q, rel, link=True):
     return (f'<li class="q" id="{q["id"]}" data-m="{q["meeting"]}" data-s="{esc(q["speaker"].split(" (")[0])}" data-sec="{esc(q["section"] or "")}" data-b="{1 if q["boards"] else 0}">'
             f'<p class="q-meta"><span class="q-who">{esc(q["speaker"])}</span><span>{day(q["date"])}</span><span>{where}{q["time"]}</span>{boards}{anchor}</p>'
             f'<blockquote>“{esc(q["text"])}”</blockquote>'
+            + (quote_source(q) if q["boards"] else "") +
             f'<p class="q-filed">{esc(filed)}</p></li>')
 
 
@@ -251,7 +282,7 @@ def evidence_page():
   <label>Meeting<select id="f-m"><option value="">All</option>{meets}</select></label>
   <label>Speaker<select id="f-s"><option value="">All</option>{"".join(f"<option>{esc(s)}</option>" for s in speakers)}</select></label>
   <label>Filed under<select id="f-sec"><option value="">All</option>{"".join(f"<option>{esc(s)}</option>" for s in sections)}</select></label>
-  <label class="check"><input type="checkbox" id="f-b"> Cited on a board</label>
+  <label class="check"><input type="checkbox" id="f-b"> Actively used as evidence</label>
 </form>
 <ul class="quotes" id="quotes">{"".join(quote_li(q, "../") for q in QUOTES)}</ul>
 <p class="prose" id="none" hidden>No quote matches. Clear a filter to widen the search.</p>

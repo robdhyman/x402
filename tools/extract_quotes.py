@@ -73,6 +73,13 @@ def add(quotes, meeting, time, chat, speaker, text, section, topic, board=None, 
     return q
 
 
+def recording_start(cowork, date):
+    """UTC start of the Zoom recording, read from its file name (GMT20261013-145412_Recording...)."""
+    hits = glob.glob(os.path.join(cowork, "transcripts", f"GMT{date.replace('-', '')}-*_Recording.transcript.vtt"))
+    m = re.search(r"GMT(\d{4})(\d\d)(\d\d)-(\d\d)(\d\d)(\d\d)_", os.path.basename(hits[0])) if hits else None
+    return f"{m[1]}-{m[2]}-{m[3]}T{m[4]}:{m[5]}:{m[6]}Z" if m else None
+
+
 def load_vtt(cowork, date):
     hits = glob.glob(os.path.join(cowork, "transcripts", f"GMT{date.replace('-', '')}-*_Recording.transcript.vtt"))
     cues = []
@@ -146,7 +153,8 @@ def main():
         seen[base] = seen.get(base, 0) + 1
         q["id"] = base if seen[base] == 1 else f"{base}-{seen[base]}"
     counts = {n: sum(1 for q in out if q["meeting"] == n) for n in MEETINGS}
-    json.dump({"meetings": [{"n": n, "date": d, "quotes": counts[n]} for n, d in MEETINGS.items()], "quotes": out},
+    meetings = [{"n": n, "date": d, "quotes": counts[n], "recording_start_utc": recording_start(a.cowork, d)} for n, d in MEETINGS.items()]
+    json.dump({"meetings": meetings, "quotes": out},
               open(os.path.join(REPO, "evidence", "quotes.json"), "w", encoding="utf-8"), indent=1, ensure_ascii=False)
     rows = []
     for line in open(os.path.join(a.cowork, "analysis", "14-uc1-change-log.md"), encoding="utf-8"):
