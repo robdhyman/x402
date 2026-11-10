@@ -1,0 +1,218 @@
+{
+ "id": "k0",
+ "no": "K0",
+ "title": "Key diagram",
+ "instance": "The sub-diagrams below are this drawing with the lanes renamed and the slots filled. Nothing in the protocol touches the Principal or Buyer lanes; the Agent is the x402 client.",
+ "lanes": [
+  [
+   "principal",
+   "Principal",
+   "the person or org the purchase is for"
+  ],
+  [
+   "buyer",
+   "Buyer",
+   "the person who runs the agent",
+   true
+  ],
+  [
+   "agent",
+   "Agent",
+   "x402 client",
+   true
+  ],
+  [
+   "seller",
+   "Seller",
+   "resource server"
+  ],
+  [
+   "fac",
+   "Facilitator",
+   "verify and settle"
+  ]
+ ],
+ "overrides": {},
+ "insert": [],
+ "differs": null,
+ "slots": [
+  [
+   "A",
+   "Delegated authority",
+   "Who delegated what to whom, and when. Three things that are easy to blur (Nicole, Oct 27 00:32–00:36): identity answers “who is this?”; delegation is the scope the agent got (which sellers, what budget, what time window, what permissions); the audit trail ties both to one transaction so the chain can be rebuilt later. Limits are a separate note (Alfred [00:37:59], Nicole [00:38:01] “Check.”); whether delegated authority is in scope waits on the TSC."
+  ],
+  [
+   "B",
+   "The seller’s disclosure profile, and what comes back",
+   "B is the region between M1 and M4. The seller’s requirement is not a universal minimum: each seller sets two dials (Nicole, Oct 27 00:37–00:42): which fields it needs (email, org ID, human ID) and what assurance each needs (self-attested, or verified by a third party). The assurance steps up with the value or kind of transaction (Reuben, Oct 27 00:42). The 402 is the ask and M3 is the answer; the spec has no separate identity message (Krystal [00:32:51], Nicole [00:34:00])."
+  ],
+  [
+   "C",
+   "The wallet address is the identifier anchor",
+   "The payload proves control of the paying wallet and nothing more. A wallet is an account, an identifier; it is not an identity, which is a legal person or an organization (Adrian, Oct 27; accepted by Alfred). The anchor is the stable identifier the evidence chain hangs on (Nicole [00:51:53]); linking it to an identity is the separate dashed step below it (RFP 4.2.1)."
+  ],
+  [
+   "D",
+   "Seller policy check",
+   "The fields the seller needs and the assurance level it needs for each, set from its own risk tolerance and logged as evidence (Nicole [00:47:38], Krystal [00:50:34])."
+  ],
+  [
+   "E",
+   "The record, read later",
+   "Audit, dispute and limit evidence. A Verifier checks the record and a Relying Party acts on it; neither sends or receives a protocol message, so they are not lanes (RFP 1.2 actors). Signed offers and receipts are the nearest protocol extension. Limit evidence is still open (Nicole [00:30:16])."
+  ]
+ ],
+ "footer": [
+  [
+   "Today",
+   "x402 v2 names three parties (client, resource server, facilitator) and identifies a payer only by wallet address. The signature on the payload proves control of that wallet for one transfer, nothing about who stands behind it."
+  ],
+  [
+   "Fills it with",
+   "Placements, not designs: A at delegation, B the region where the seller states its profile and the buyer answers, C in the payload, with the identity link a separate step. The protocol’s own <code>extensions</code> field is where B and C ride."
+  ],
+  [
+   "Assurance tier",
+   "K0 assumes none. Each sub-diagram states the tier its case assumes: self-attested, provable, or issued by an authority."
+  ],
+  [
+   "Still open",
+   "Mechanism for every slot · whether x402 should recommend a universal minimum profile (Nicole, Oct 27: a requirement, perhaps, not the drawing) · whether M4/M5 is where an external-identity authorization sits (Joseph, Oct 27; Alfred: too prescriptive for requirements) · whether delegated authority and limits are in scope (TSC) · whether the wallet signature is enough (T7) · who holds the developer-to-org mapping (T5) · what, if anything, is recorded after settlement."
+  ]
+ ],
+ "steps": [
+  {
+   "id": "A",
+   "kind": "ident",
+   "from": "principal",
+   "to": "buyer",
+   "slot": "A",
+   "label": "delegated authority",
+   "sub": "who delegated what to whom, and when · identity says who; delegation says what scope; the audit trail ties both to one transaction · limits are a separate note · scope pending TSC"
+  },
+  {
+   "id": "A2",
+   "kind": "ident",
+   "from": "buyer",
+   "to": "agent",
+   "label": "the buyer sets the agent's scope",
+   "sub": "sellers, budget, time window, permissions · the agent acts within it"
+  },
+  {
+   "id": "M1",
+   "kind": "msg",
+   "from": "agent",
+   "to": "seller",
+   "label": "M1 request",
+   "sub": "optional when the requirements are already known"
+  },
+  {
+   "id": "B",
+   "kind": "region",
+   "after": "M1",
+   "before": "M4",
+   "slot": "B",
+   "label": "the seller's disclosure profile, and what comes back",
+   "sub": "the 402 states the payment terms and, through extensions, which fields this seller needs (email · org ID · human ID) and at what assurance (self-attested · third-party verified), stepping up with the value at stake · the buyer answers on the retried request: the signed payload plus those fields"
+  },
+  {
+   "id": "M2",
+   "kind": "msg",
+   "from": "seller",
+   "to": "agent",
+   "label": "M2 402 PAYMENT-REQUIRED",
+   "sub": "accepts[] · resource · extensions"
+  },
+  {
+   "id": "w1",
+   "kind": "work",
+   "lane": "agent",
+   "label": "picks a requirement, signs the payload"
+  },
+  {
+   "id": "M3",
+   "kind": "msg",
+   "from": "agent",
+   "to": "seller",
+   "label": "M3 PAYMENT-SIGNATURE",
+   "sub": "payload: signature + authorization.from"
+  },
+  {
+   "id": "C",
+   "kind": "ident",
+   "from": "agent",
+   "to": "seller",
+   "slot": "C",
+   "label": "the wallet address is the identifier anchor",
+   "sub": "authorization.from · an identifier (an account), not an identity (a legal person or org) · stable across calls, even if pseudonymous"
+  },
+  {
+   "id": "C2",
+   "kind": "ident",
+   "from": "agent",
+   "to": "seller",
+   "label": "linking the identifier to an identity (4.2.1)",
+   "sub": "an entity ID the seller can verify: a domain, or another ID with a defined link · at the Principal's election · mechanism open"
+  },
+  {
+   "id": "M4",
+   "kind": "msg",
+   "from": "seller",
+   "to": "fac",
+   "label": "M4 POST /verify",
+   "sub": "optional when the seller verifies locally"
+  },
+  {
+   "id": "M5",
+   "kind": "msg",
+   "from": "fac",
+   "to": "seller",
+   "label": "M5 VerifyResponse",
+   "sub": "isValid · invalidReason · payer"
+  },
+  {
+   "id": "w2",
+   "kind": "work",
+   "lane": "seller",
+   "label": "does the work"
+  },
+  {
+   "id": "M6",
+   "kind": "msg",
+   "from": "seller",
+   "to": "fac",
+   "label": "M6 POST /settle",
+   "sub": "or settles on chain itself"
+  },
+  {
+   "id": "w3",
+   "kind": "work",
+   "lane": "fac",
+   "label": "submits to chain, waits for confirmation"
+  },
+  {
+   "id": "M7",
+   "kind": "msg",
+   "from": "fac",
+   "to": "seller",
+   "label": "M7 SettlementResponse",
+   "sub": "success · transaction · network · payer"
+  },
+  {
+   "id": "M8",
+   "kind": "msg",
+   "from": "seller",
+   "to": "agent",
+   "label": "M8 200 + PAYMENT-RESPONSE",
+   "sub": "the resource, plus the settlement result"
+  },
+  {
+   "id": "E",
+   "kind": "slot",
+   "lane": "seller",
+   "slot": "E",
+   "label": "the record, read later",
+   "sub": "a Verifier checks it, a Relying Party acts on it · neither sends or receives a protocol message"
+  }
+ ]
+}

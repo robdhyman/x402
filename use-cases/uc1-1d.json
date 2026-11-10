@@ -1,0 +1,124 @@
+{
+ "id": "uc1-1d",
+ "no": "UC1.1 · 1d",
+ "title": "Consumer buying a flight through an assistant",
+ "instance": "Carried from Nicole’s page, Case 3. Named on Oct 13 but not shown; unreviewed until the async round (Nicole [01:04:44], [01:05:03]). Was “UC1 · 3” before the RFP renumbering.",
+ "unreviewed": true,
+ "lanes": [
+  [
+   "buyer",
+   "The traveller",
+   "principal and buyer in one person",
+   true
+  ],
+  [
+   "agent",
+   "Agent",
+   "travel assistant",
+   true
+  ],
+  [
+   "seller",
+   "Seller",
+   "airline"
+  ],
+  [
+   "fac",
+   "Facilitator",
+   "verify and settle"
+  ]
+ ],
+ "merge": {
+  "principal": "buyer"
+ },
+ "overrides": {
+  "A": {
+   "label": "the traveller sets the request and its limits",
+   "sub": "route, date, class, a ceiling, a time window · the ceiling is a separate note"
+  },
+  "A2": {
+   "label": "the assistant acts within them",
+   "sub": "a general request; approval of a specific fare is separate evidence"
+  },
+  "B": {
+   "label": "the airline's profile asks for payment terms and a fare acceptance, nothing more",
+   "sub": "no identity request; the 402 quotes the fare · the answer: the signed payload plus the in-limits proof or the traveller's approval · constraint: no identity or destination in any public record (4.1.8, T17)"
+  },
+  "C": {
+   "label": "the wallet address is the identifier anchor; the approval rides alongside",
+   "sub": "inside the limits, or the traveller's approval of this specific fare"
+  },
+  "C2": {
+   "label": "no identity link: the traveller stays unidentified",
+   "sub": "4.1.8, T17"
+  },
+  "E": {
+   "label": "dispute: “I didn't book this”",
+   "sub": "decided from the record by someone who trusts neither side"
+  }
+ },
+ "insert": [
+  {
+   "after": "M2",
+   "steps": [
+    {
+     "id": "alt1",
+     "kind": "ident",
+     "from": "agent",
+     "to": "principal",
+     "label": "if the fare is outside the limits: asks the traveller",
+     "sub": "a general request and approval of a specific offer are different evidence"
+    },
+    {
+     "id": "alt2",
+     "kind": "ident",
+     "from": "principal",
+     "to": "agent",
+     "label": "approves this fare",
+     "sub": "or declines; then no payload is signed"
+    }
+   ]
+  }
+ ],
+ "differs": "Differs from K0 in A (a person, per request, one lane) and in two added dashed steps inside B (approval of a fare outside the limits).",
+ "slots": [
+  [
+   "A",
+   "The traveller sets the request and limits",
+   "Nicole’s page: a route, a date, a class, a ceiling and a time window. The ceiling is a note, not in the label."
+  ],
+  [
+   "B",
+   "Payment terms and a fare acceptance, nothing more",
+   "The airline needs no identity to quote a fare: both dials at zero. The constraint is the other way round: no identity or destination in a record that may become public (RFP 4.1.8, T17)."
+  ],
+  [
+   "C",
+   "The wallet is the anchor; inside the limits, or approved",
+   "If the quoted fare is outside the limits, the assistant asks and the traveller approves that specific fare; the approval is evidence distinct from the original request (Nicole’s page, E2)."
+  ],
+  [
+   "E",
+   "Dispute, decided from the record",
+   "Nicole’s page draws a Dispute evaluator lane; here it is a relying party on E. The record must be checkable by someone who trusts neither the airline nor the assistant."
+  ]
+ ],
+ "footer": [
+  [
+   "Today",
+   "The payload proves the assistant’s wallet signed. It does not show that the traveller set the limits or approved an exception."
+  ],
+  [
+   "Fills it with",
+   "The request and limits in A, the exception approval as two dashed steps inside B, the approval or the in-limits proof in C."
+  ],
+  [
+   "Assurance tier",
+   "Provable: the traveller’s approval is signed, but the traveller is not identified to the airline."
+  ],
+  [
+   "Still open",
+   "Unreviewed by the WG · where a dispute evaluator reads the record · whether the approval step is a message or an annotation (it is drawn dashed, no protocol message exists for it)."
+  ]
+ ]
+}

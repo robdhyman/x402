@@ -1,0 +1,27 @@
+name: Raise a tension
+description: Two needs conflict on a use case and must be settled before it is done.
+title: "[UC1.1a] "
+labels: ["tension"]
+body:
+  - type: markdown
+    attributes:
+      value: Keep the use case tag at the start of the title, for example `[UC1.2]` or `[K0]`. The page lists the tension under that case.
+  - type: textarea
+    id: need-a
+    attributes:
+      label: One need
+      description: Who needs what, and why. Quote and time-stamp the meeting if you can.
+    validations:
+      required: true
+  - type: textarea
+    id: need-b
+    attributes:
+      label: The need it conflicts with
+      description: Who needs the opposite, or what constraint it runs into.
+    validations:
+      required: true
+  - type: textarea
+    id: settle
+    attributes:
+      label: What would settle it
+      description: A decision, a missing fact, or who has to rule on it.

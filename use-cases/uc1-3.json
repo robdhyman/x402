@@ -1,0 +1,162 @@
+{
+ "id": "uc1-3",
+ "no": "UC1.3",
+ "title": "One standing authority, many charges, and when it ended",
+ "instance": "RFP Nov 9 export, §2.2 UC1.3 (heading still reads “1.323” in the export; the old UC23): “A Principal grants its Agent a standing authority of up to $50 a month with one Seller, until cancelled. The Agent pays monthly. In month nine the Principal cancels, and the Seller charges again in month ten.” Skeleton drawn in Session 0: one charge cycle plus cancellation. The ten-month timeline strip is Session 3.",
+ "unreviewed": true,
+ "lanes": [
+  [
+   "principal",
+   "Principal",
+   "grants the standing authority"
+  ],
+  [
+   "buyer",
+   "Buyer",
+   "the person who set it up",
+   true
+  ],
+  [
+   "agent",
+   "Agent",
+   "pays monthly under it",
+   true
+  ],
+  [
+   "seller",
+   "Seller",
+   "one seller, a subscription"
+  ],
+  [
+   "fac",
+   "Facilitator",
+   "verify and settle"
+  ]
+ ],
+ "overrides": {
+  "A": {
+   "label": "standing authority: up to $50 a month, one seller, until cancelled",
+   "sub": "one grant funds many payments · cap and term are the mandate's limits (4.3.2)"
+  },
+  "A2": {
+   "label": "the buyer sets the agent to pay monthly",
+   "sub": "the agent acts under the standing authority, not a fresh grant each month"
+  },
+  "B": {
+   "label": "the 402 quotes this month's charge",
+   "sub": "the seller's profile may ask for nothing new on a repeat charge · the answer: the signed payload with the authority reference"
+  },
+  "C": {
+   "label": "the authority reference and cumulative use ride in the payment nonce (#3220)",
+   "sub": "which standing authority · how much of it used so far · its state at the moment of payment"
+  },
+  "C2": {
+   "label": "the identifier is linked to the Principal's entity ID (4.2.1)",
+   "sub": "so the authority can be tied to who granted it"
+  },
+  "E": {
+   "label": "the record: each charge, its authority, cumulative use, state at the time",
+   "sub": "a Verifier establishes each payment stayed within the aggregate limits and term (4.3.2)"
+  }
+ },
+ "insert": [
+  {
+   "after": "E",
+   "steps": [
+    {
+     "id": "F",
+     "kind": "ident",
+     "from": "principal",
+     "to": "seller",
+     "slot": "F",
+     "label": "month 9: cancellation instruction",
+     "sub": "the instruction, timestamped · who it must reach is open: the seller, the facilitator, or both"
+    },
+    {
+     "id": "F2",
+     "kind": "ident",
+     "from": "seller",
+     "to": "principal",
+     "label": "acknowledgement by the party that must act on it",
+     "sub": "the record separates instruction, acknowledgement and effective time (RFP UC1.3)"
+    },
+    {
+     "id": "F3",
+     "kind": "note",
+     "lane": "seller",
+     "label": "effective time",
+     "sub": "withdrawal and expiry take effect at a stated time (4.1.9)"
+    },
+    {
+     "id": "M6b",
+     "kind": "msg",
+     "from": "seller",
+     "to": "fac",
+     "label": "M6 POST /settle · month 10",
+     "sub": "the seller charges again under the same authority reference"
+    },
+    {
+     "id": "w4",
+     "kind": "work",
+     "lane": "fac",
+     "label": "authority state at the moment of payment: ended in month 9",
+     "sub": "cumulative use and state come from the nonce and the record, not from either party's say-so"
+    },
+    {
+     "id": "M7b",
+     "kind": "msg",
+     "from": "fac",
+     "to": "seller",
+     "label": "M7 SettlementResponse · month 10",
+     "sub": "the charge is flagged: after the authority ended"
+    }
+   ]
+  }
+ ],
+ "differs": "Differs from K0 in A (a standing grant, not a per-purchase one), in C (authority reference plus cumulative use in the nonce), and in a new slot F for cancellation, which K0 has no place for.",
+ "slots": [
+  [
+   "A",
+   "A standing authority",
+   "RFP UC1.3: “Subscriptions, metered plans and agent budgets mean one grant of authority funds many payments. Twelve monthly charges can be twelve uses of one authority, or one authorized charge followed by eleven unauthorized ones. A valid signature on each charge does not tell them apart.”"
+  ],
+  [
+   "B",
+   "The 402 quotes this month’s charge",
+   "Nothing new in the profile on a repeat charge; what changes is the answer, which carries the authority reference."
+  ],
+  [
+   "C",
+   "Authority reference and cumulative use, in the nonce",
+   "RFP UC1.3: “Under #3220 the binding of authority to payment already sits in the payment nonce, so the link can be verified rather than asserted.” For each charge: which authority, cumulative use at the time, the authority’s state at the moment of payment."
+  ],
+  [
+   "E",
+   "Each charge against the mandate’s aggregate limits and term",
+   "RFP 4.3.2: “the specification SHALL enable a Verifier to establish that each payment, together with prior payments under the same mandate, stayed within the mandate’s aggregate limits and term.”"
+  ],
+  [
+   "F",
+   "Cancellation: instruction, acknowledgement, effective time",
+   "RFP UC1.3: “the record must separate the instruction, its acknowledgement by the party that must act on it, and the time it takes effect, so a Relying Party can determine whether a charge came before or after the authority ended.” RFP 4.1.9: withdrawal and expiry take effect at a stated time."
+  ]
+ ],
+ "footer": [
+  [
+   "Today",
+   "RFP UC1.3: “Cancellation is where these disputes concentrate. The payer says the authority ended on a date; the Seller says it never received the instruction. Card and direct debit schemes have rules for exactly this. x402 has none.”"
+  ],
+  [
+   "Fills it with",
+   "The standing grant in A, the authority reference and cumulative use in C, the per-charge record in E, and cancellation in F as three separate marks: instruction, acknowledgement, effective time."
+  ],
+  [
+   "Assurance tier",
+   "Provable: the authority-to-payment binding is in the nonce and can be verified, not asserted."
+  ],
+  [
+   "Still open",
+   "Not yet seen by the WG · who must acknowledge the instruction (seller, facilitator, or both) · whether month 10 is refused at verify, flagged at settle, or settled and remediated (S8) · the ten-month timeline strip (Session 3) · how 4.1.11 (revocation and correction, auditable history) applies to non-identity mandates."
+  ]
+ ]
+}

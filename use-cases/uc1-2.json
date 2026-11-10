@@ -1,0 +1,133 @@
+{
+ "id": "uc1-2",
+ "no": "UC1.2",
+ "title": "Payments within one corporate family",
+ "instance": "RFP Nov 9 export, §2.2 UC1.2, from wg-tax #1 (v0.3 §2.3 UC-10, §3): “An engineer in the same company deploys a buying agent that, in the course of its work, pays for the company's own API.” Skeleton drawn in Session 0; the WG has not seen it.",
+ "unreviewed": true,
+ "lanes": [
+  [
+   "principal",
+   "Principal",
+   "the corporate family"
+  ],
+  [
+   "buyer",
+   "Buyer",
+   "an engineer in the same company",
+   true
+  ],
+  [
+   "agent",
+   "Agent",
+   "the buying agent",
+   true
+  ],
+  [
+   "seller",
+   "Seller",
+   "the company's own API"
+  ],
+  [
+   "fac",
+   "Facilitator",
+   "verify and settle"
+  ]
+ ],
+ "overrides": {
+  "A": {
+   "label": "the company delegates to its engineer",
+   "sub": "ordinary delegation · nothing in it marks the purchase as internal"
+  },
+  "A2": {
+   "label": "the engineer sets the agent's scope",
+   "sub": "the agent does not know the seller is its own company"
+  },
+  "B": {
+   "label": "the seller's profile asks for the payer's entity ID",
+   "sub": "4.2.1: the link from the wallet to a globally unique entity ID, at the Principal's election · the answer: the signed payload plus the entity ID · S3 carries it"
+  },
+  "C": {
+   "label": "the wallet address is the identifier anchor",
+   "sub": "authorization.from · the same wallet whether the payer is a customer or the company itself"
+  },
+  "C2": {
+   "label": "the identifier is linked to the payer's entity ID (4.2.1)",
+   "sub": "a domain, LEI or other ID with a defined link · the link is what makes the family visible"
+  },
+  "E": {
+   "label": "the record shows presence, or absence, of related-party revenue",
+   "sub": "the seller, its auditor or another Relying Party reads it · absence must be shown from the records alone"
+  }
+ },
+ "insert": [
+  {
+   "after": "M5",
+   "steps": [
+    {
+     "id": "rp1",
+     "kind": "work",
+     "lane": "seller",
+     "label": "same Principal or corporate family?",
+     "sub": "payer (S4/S5) resolved to an entity ID, compared with the seller's own · the one decision this case adds"
+    }
+   ]
+  },
+  {
+   "after": "M7",
+   "steps": [
+    {
+     "id": "rp2",
+     "kind": "work",
+     "lane": "seller",
+     "label": "flags the settlement as related-party",
+     "sub": "S7: not evaluated as revenue · S8: eliminated in consolidation"
+    }
+   ]
+  }
+ ],
+ "differs": "Differs from K0 in one decision at the seller after M5 (does the payer resolve to the same family?) and in a flag carried from S7 into the record.",
+ "slots": [
+  [
+   "A",
+   "Ordinary delegation",
+   "The company delegates to its engineer, the engineer scopes the agent. Nothing in the grant says the purchase is internal; that is why the record, not the authority, has to show it."
+  ],
+  [
+   "B",
+   "The seller’s profile asks for the payer’s entity ID",
+   "RFP 4.2.1: “a mechanism a Seller can use to link the Buyer identifier (e.g.- wallet address) to a globally unique entity ID”, internet domains required, other IDs allowed with a defined link, use at the Principal’s election. Fields dial: entity ID. Assurance dial: verifiable."
+  ],
+  [
+   "C",
+   "The wallet is the anchor; the entity link makes the family visible",
+   "The settlement is real and the wallet looks like any customer’s. Only the link from wallet to entity ID (4.2.1) lets payer and payee be resolved to the same Principal or corporate family."
+  ],
+  [
+   "E",
+   "Presence or absence of related-party revenue, from the record",
+   "RFP UC1.2: “Evidence is needed so the Seller, its auditor or another Relying Party can determine from the record whether payer and payee resolve to the same Principal or corporate family … It must be possible to show the absence of related-party revenue from the records alone.”"
+  ]
+ ],
+ "footer": [
+  [
+   "Today",
+   "RFP UC1.2: “An agent deployed inside a company can buy that company's own service. The settlement is real; the revenue is not.” Like test purchases (UC8), these settlements look the same as customer demand."
+  ],
+  [
+   "Fills it with",
+   "The payer’s entity ID in B, carried at S3 and S5; the related-party decision at the seller after M5; the flag at S7 and elimination at S8."
+  ],
+  [
+   "Assurance tier",
+   "Provable: an entity ID the seller can verify against a domain or register."
+  ],
+  [
+   "Why it matters",
+   "RFP UC1.2: “Transactions inside one corporate family must be eliminated in consolidation, and other related-party transactions disclosed, rather than booked as ordinary sales (ASC 810 and 850; IFRS 10 and IAS 24). Booked unknowingly, this is a misstatement; booked knowingly, it can be fraud.” Under Sarbanes-Oxley, signing officers attest personally to the controls meant to catch it."
+  ],
+  [
+   "Still open",
+   "Not yet seen by the WG · whether the decision sits at the seller or with an Evaluator (the RFP lists one among the actors) · how absence is shown from records alone · whether 1c (MSA) folds into this case · round-tripping and wash trading at scale."
+  ]
+ ]
+}

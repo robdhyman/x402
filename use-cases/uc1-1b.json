@@ -1,0 +1,103 @@
+{
+ "id": "uc1-1b",
+ "no": "UC1.1 · 1b",
+ "title": "Developer in an organization buying an API",
+ "instance": "Oct 13: the split the room agreed to. Nicole [00:40:13] “We can definitely split that out.” The seller wants the org, not the person: Melodie [00:30:58].",
+ "lanes": [
+  [
+   "principal",
+   "Principal",
+   "the organization"
+  ],
+  [
+   "buyer",
+   "Buyer",
+   "a developer in the org",
+   true
+  ],
+  [
+   "agent",
+   "Agent",
+   "the developer's coding agent",
+   true
+  ],
+  [
+   "seller",
+   "Seller",
+   "data API"
+  ],
+  [
+   "fac",
+   "Facilitator",
+   "verify and settle"
+  ]
+ ],
+ "overrides": {
+  "A": {
+   "label": "org delegates to the developer",
+   "sub": "the developer is a local identifier inside the org (Melodie 00:32:18) · limits a separate note"
+  },
+  "A2": {
+   "label": "the developer sets the agent's scope",
+   "sub": "within what the org allowed"
+  },
+  "B": {
+   "label": "this seller's profile: the org ID, verifiable",
+   "sub": "the 402 states the payment terms and the org affiliation it needs (Melodie 00:31:20) · the answer: the signed payload plus a verifiable org identifier · the developer's own identity is not asked for"
+  },
+  "C": {
+   "label": "the wallet address is the identifier anchor",
+   "sub": "authorization.from · which account, not which org"
+  },
+  "C2": {
+   "label": "the identifier is linked to the org's entity ID (4.2.1)",
+   "sub": "a domain or LEI the seller can verify · the developer's local id: org-held or passed to the seller (T5)"
+  },
+  "E": {
+   "label": "trace a transaction to a user in the org",
+   "sub": "even though the user's verified identity never left the org (Nicole 00:36:47)"
+  }
+ },
+ "insert": [],
+ "differs": "Differs from K0 in the Principal lane (an organization) and in A, B, C (org affiliation, not the person).",
+ "slots": [
+  [
+   "A",
+   "Org delegates to the developer, who scopes the agent",
+   "Alfred [00:37:32] “they might already have a data model where they have an org, and they have a specific user with team members, and then the agent.” The developer is a local identifier the org keeps (Melodie [00:32:18] “We have local UUIDs or things like that.”)."
+  ],
+  [
+   "B",
+   "This seller’s profile: which org, and is it approved",
+   "Melodie [00:31:20] “we care about having some kind of affiliation between the requester and the entity, just to… for us to know that the entity in itself has been approved.” Fields dial: org ID. Assurance dial: verifiable."
+  ],
+  [
+   "C",
+   "The wallet is the anchor; the org is the identity it links to",
+   "The link from wallet to org entity ID is RFP 4.2.1. Whether the developer’s local identifier also travels to the seller is tension T5; both readings are drawn in Phase 4."
+  ],
+  [
+   "E",
+   "Trace back to a user in the org",
+   "Nicole [00:36:47] “I also want to be able to trace back certain transactions to a particular user in my organization”. Held on the org side."
+  ]
+ ],
+ "footer": [
+  [
+   "Today",
+   "The payload names a wallet. Nothing says which organization controls it, or that the developer running the agent may spend its funds."
+  ],
+  [
+   "Fills it with",
+   "Org affiliation in B, the wallet in C with the link to the org’s entity ID; the person stays inside the org."
+  ],
+  [
+   "Assurance tier",
+   "Provable: Melodie [00:38:04] “the good thing about an org is that you can have, like, easy means of having publicly verifiable data.”"
+  ],
+  [
+   "Still open",
+   "Who holds the developer-to-org mapping (T5) · whether this case is really the B2B flow (Adrian, chat 00:33:13, unanswered) · whether delegated authority is in scope (TSC)."
+  ]
+ ]
+}

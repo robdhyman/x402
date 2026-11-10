@@ -1,0 +1,101 @@
+{
+ "id": "uc1-1a",
+ "no": "UC1.1 · 1a",
+ "title": "Solo developer buying an API",
+ "instance": "Oct 13: the minimum-party case. Adrian [00:39:45] “That's the minimum number of parties in this, and that single developer is both the principal and the buyer.” Oct 27: the Principal and Buyer lanes are drawn as one person.",
+ "lanes": [
+  [
+   "buyer",
+   "The developer",
+   "principal and buyer in one person",
+   true
+  ],
+  [
+   "agent",
+   "Agent",
+   "the developer's coding agent",
+   true
+  ],
+  [
+   "seller",
+   "Seller",
+   "data API"
+  ],
+  [
+   "fac",
+   "Facilitator",
+   "verify and settle"
+  ]
+ ],
+ "merge": {
+  "principal": "buyer"
+ },
+ "overrides": {
+  "A": {
+   "label": "none to delegate: the developer is principal and buyer",
+   "sub": "identity: the developer · delegated authority: none, the developer spends its own funds · audit trail: the developer's own records"
+  },
+  "A2": {
+   "label": "the developer sets the agent's scope",
+   "sub": "which API, how much, for how long"
+  },
+  "B": {
+   "label": "this seller's profile: an email, self-attested",
+   "sub": "the 402 carries the payment terms and, via extensions, the ask for an email · the answer: M3 signature + authorization.from, the email alongside · another seller may set a different profile"
+  },
+  "C": {
+   "label": "the wallet address is the identifier anchor",
+   "sub": "authorization.from · the same address across calls · says which account, not which person"
+  },
+  "C2": {
+   "label": "no identity link asked for",
+   "sub": "4.2.1 is at the Principal's election; this seller's profile does not need it"
+  },
+  "E": {
+   "label": "the developer reviews its own spend",
+   "sub": "no Verifier or Relying Party beyond the developer"
+  }
+ },
+ "insert": [],
+ "differs": "Differs from K0 in A (collapses: principal = buyer, one lane) and in B (this seller’s profile asks for one self-attested field).",
+ "slots": [
+  [
+   "A",
+   "None to delegate",
+   "The developer is both principal and buyer; the agent spends the developer’s own funds. In Nicole’s three-way split (Oct 27 00:32–00:36) the identity is the developer, the delegated authority is empty, and the audit trail is the developer’s own records. Adrian [00:39:31] “perhaps they've got loaded their own wallet with stablecoins and they want to use X402 to experiment with it.”"
+  ],
+  [
+   "B",
+   "This seller’s profile: an email, self-attested",
+   "The lowest profile a seller can set, not a universal minimum. Adrian [00:39:50] “perhaps the API vendor might want an email or something to know who's using their service.” A seller fighting free-trial abuse would set the assurance dial higher (Nicole, Oct 27 00:40)."
+  ],
+  [
+   "C",
+   "The wallet address is the identifier anchor",
+   "The spec’s only identifier. Metering and the free tier key off it. It names an account, not a person (Adrian, Oct 27)."
+  ],
+  [
+   "E",
+   "The developer reviews its own spend",
+   "No auditor, no dispute evaluator. Limit evidence is the developer’s own concern."
+  ]
+ ],
+ "footer": [
+  [
+   "Today",
+   "Nicole [00:26:39]: “a developer buying an API service, which is a core use case of Explorer 2 [x402] today.” Works with no identity at all."
+  ],
+  [
+   "Fills it with",
+   "An email in B, keyed to the wallet in C. Nothing else."
+  ],
+  [
+   "Assurance tier",
+   "Self-attested."
+  ],
+  [
+   "Still open",
+   "Whether x402 should recommend a universal minimum profile (Nicole, Oct 27 00:37–00:42: “potentially” a requirement, not the diagram) · whether this case needs a diagram of its own or is the empty instance of K0 (Adrian [00:39:55]: “the simplest place to start with”)."
+  ]
+ ]
+}

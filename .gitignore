@@ -1,0 +1,7 @@
+_site/
+__pycache__/
+boards/family.html
+boards/family.json
+boards/export/*.svg
+boards/export/*.html
+.DS_Store

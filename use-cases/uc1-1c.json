@@ -1,0 +1,104 @@
+{
+ "id": "uc1-1c",
+ "no": "UC1.1 · 1c",
+ "title": "B2B procurement under a master services agreement",
+ "instance": "Carried from Nicole’s page, Case 2. Named on Oct 13 but not shown; unreviewed until the async round (Nicole [01:04:44], [01:05:03]). Was “UC1 · 2” before the RFP renumbering.",
+ "unreviewed": true,
+ "lanes": [
+  [
+   "principal",
+   "Principal",
+   "the company, a legal entity"
+  ],
+  [
+   "buyer",
+   "Buyer",
+   "an approver in procurement",
+   true
+  ],
+  [
+   "agent",
+   "Agent",
+   "procurement agent",
+   true
+  ],
+  [
+   "seller",
+   "Seller",
+   "data vendor under an MSA"
+  ],
+  [
+   "fac",
+   "Facilitator",
+   "verify and settle"
+  ]
+ ],
+ "overrides": {
+  "A": {
+   "label": "company delegates through an approver",
+   "sub": "approved vendors · no hop widens the authority · caps a separate note"
+  },
+  "A2": {
+   "label": "the approver sets the agent's scope",
+   "sub": "a purchase order reference · per-order and monthly caps"
+  },
+  "B": {
+   "label": "the seller's profile asks for the legal entity on the MSA, verified",
+   "sub": "the price depends on it, so the 402 must ask before the payload is signed · the answer: the signed payload plus the entity and the delegation chain"
+  },
+  "C": {
+   "label": "the wallet address is the identifier anchor",
+   "sub": "the wallet alone does not say which company"
+  },
+  "C2": {
+   "label": "the identifier is linked to the legal entity (4.2.1); the delegation chain travels with it",
+   "sub": "an LEI or domain, verifiable against a register"
+  },
+  "E": {
+   "label": "AP matches the PO; the auditor tests the caps",
+   "sub": "record kept for both · cap evidence cites 4.3.2"
+  }
+ },
+ "insert": [],
+ "differs": "Differs from K0 in A (a two-hop delegation) and B (the legal entity must be known before settlement because it sets the price).",
+ "slots": [
+  [
+   "A",
+   "Company, through an approver, to the agent",
+   "From Nicole’s page: approved vendors, per-order and monthly caps, a purchase order. The caps are drawn as a note, not in the label (Alfred [00:37:59])."
+  ],
+  [
+   "B",
+   "Is this the legal entity on the MSA?",
+   "Nicole’s page puts this before settlement because the contract rate depends on it. Fields dial: the legal entity. Assurance dial: verified against a register."
+  ],
+  [
+   "C",
+   "The wallet is the anchor; the legal entity and the chain link to it",
+   "The wallet alone does not say which company; the entity link (4.2.1) and the delegation chain do."
+  ],
+  [
+   "E",
+   "AP and the auditor",
+   "Nicole’s page draws an Auditor lane and gives AP its own evidence need. Here both are relying parties on the record, not lanes. Cap evidence is RFP 4.3.2 (multi-payment mandates), present in the Nov 9 export."
+  ]
+ ],
+ "footer": [
+  [
+   "Today",
+   "If the vendor learns which company it is dealing with only after settlement, the agent pays list price and the difference turns up in reconciliation (Nicole’s page)."
+  ],
+  [
+   "Fills it with",
+   "A delegation chain in A, the legal entity before settlement in B, the wallet in C with the entity link."
+  ],
+  [
+   "Assurance tier",
+   "Issued: a legal entity, verifiable against a register."
+  ],
+  [
+   "Still open",
+   "Unreviewed by the WG · whether 1b collapses into this case · where AP and the auditor read the record."
+  ]
+ ]
+}

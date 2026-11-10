@@ -1,0 +1,95 @@
+{
+ "session": "Session 0",
+ "date": "2026-11-09",
+ "feedback_from": "2026-10-27",
+ "rows": [
+  {
+   "n": "1",
+   "who": "Adrian, Nicole",
+   "when": "00:26–00:29",
+   "said": "Showing the agent as \"Buyer\" clashes with buyer = human developer, principal = their company; glossary uses the spec term \"client\"",
+   "change": "Lanes are now Principal · Buyer (the person who runs the agent) · Agent (x402 client) · Seller (resource server) · Facilitator. A new dashed step A2 (buyer sets the agent's scope) carries the hop the old drawing hid.",
+   "status": "Done, pending glossary pass"
+  },
+  {
+   "n": "2",
+   "who": "Adrian",
+   "when": "00:28:44",
+   "said": "Both the buyer and the agent can hold a wallet",
+   "change": "A \"wallet\" mark under the Buyer and Agent lane heads on every board, with a key entry",
+   "status": "Done"
+  },
+  {
+   "n": "3",
+   "who": "Nicole",
+   "when": "00:37–00:42",
+   "said": "Box B reads as a universal minimum (\"must ask for wallet address\"); the group wants a seller-configurable profile: which fields, at what assurance",
+   "change": "Slot B relabelled \"the seller's disclosure profile, and what comes back\", two dials named in the region text (fields: email · org ID · human ID; assurance: self-attested · third-party verified). 1a's B now reads \"this seller's profile: an email, self-attested\". The universal-minimum idea moved to K0 and 1a \"Still open\" as a possible x402 recommendation.",
+   "status": "Done"
+  },
+  {
+   "n": "4",
+   "who": "Reuben",
+   "when": "00:42",
+   "said": "Assurance should step up with the transaction's value or type",
+   "change": "\"stepping up with the value at stake\" added to Slot B on K0; noted in the K0 B slot text",
+   "status": "Done"
+  },
+  {
+   "n": "5",
+   "who": "Adrian, Nicole, Amanda, Alfred",
+   "when": "00:45–00:55",
+   "said": "A wallet is an account, an identifier, not an identity (a legal person or org)",
+   "change": "Slot C relabelled \"the wallet address is the identifier anchor\". The identity link is a separate dashed step C2 citing RFP 4.2.1 (entity ID, at the Principal's election). \"Identity\" is now used only for legal persons and orgs across all boards.",
+   "status": "Done"
+  },
+  {
+   "n": "6",
+   "who": "Alfred",
+   "when": "00:45:03",
+   "said": "Rename \"client\" to \"buyer\" in RFP 4.1.2",
+   "change": "No diagram change; lane subtitle keeps \"x402 client\" on the Agent lane as the spec term",
+   "status": "Noted"
+  },
+  {
+   "n": "7",
+   "who": "Monique (question), Nicole (answer)",
+   "when": "00:30–00:36",
+   "said": "\"Nothing to delegate\" in UC1A needs a gloss; identity / delegated authority / audit trail are three different things",
+   "change": "Slot A on K0 carries the three-way split in one line; 1a's A reads \"none to delegate: the developer is principal and buyer\" with the split applied (identity: the developer; delegated authority: none; audit trail: own records)",
+   "status": "Done"
+  },
+  {
+   "n": "8",
+   "who": "Nicole, Rob",
+   "when": "00:29",
+   "said": "Hard to comment on a link; export a PNG into the Google Doc",
+   "change": "`build_family.py --export` writes `export/<board>.svg`, `.html` and a 2x `.png` for every board via headless Chrome",
+   "status": "Done; paste into the RFP doc is Session 4"
+  },
+  {
+   "n": "9",
+   "who": "Joseph, Alfred",
+   "when": "00:52",
+   "said": "Is M4/M5 where the external-identity authorization sits? Alfred: too prescriptive for requirements",
+   "change": "Added to K0 \"Still open\", not drawn",
+   "status": "Done"
+  },
+  {
+   "n": "10",
+   "who": "Alfred, Nicole",
+   "when": "01:02",
+   "said": "Renumber use cases as UC1.1…",
+   "change": "Boards renumbered: old UC1 · 1a/1b are UC1.1 · 1a/1b; Nicole's MSA and flight cases are UC1.1 · 1c/1d; the RFP's UC1.2 (corporate family) and UC1.3 (standing authority) have new skeleton boards",
+   "status": "Done"
+  },
+  {
+   "n": "11",
+   "who": "—",
+   "when": "—",
+   "said": "Official glossary pass on every lane and slot label",
+   "change": "Blocked on Drive access. Provisional term sheet: `analysis/13-provisional-glossary.md`, Section 4 is the diff checklist",
+   "status": "Open"
+  }
+ ]
+}
